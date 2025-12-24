@@ -1,0 +1,19 @@
+body {
+    font-family: -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f9f9f9;
+}
+.card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 350px;
+}
+button { margin-top: 1rem; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }

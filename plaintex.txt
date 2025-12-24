@@ -1,0 +1,47 @@
+==============================================================
+ESTADO DEL PROYECTO: Web Auth Google + JWT (Consolidado)
+==============================================================
+
+OBJETIVO:
+Aplicación web minimalista (FastAPI + JS Vanilla) con autenticación OAuth2 de Google, gestión de sesiones mediante JWT y despliegue automatizado en Render.com.
+
+1. ARQUITECTURA DEL BACKEND (Python - 3 Capas):
+--------------------------------------------------------------
+- Capa de Datos (app/models.py, app/database.py): 
+    * ORM: SQLAlchemy.
+    * DB: SQLite (configurada para auto-creación de tablas al arranque).
+    * Modelo 'User': Almacena email, name y google_id.
+- Capa de Servicio (app/services.py): 
+    * Lógica de validación de tokens de Google.
+    * Generación de JWT propios firmados con SECRET_KEY.
+- Capa de Controlador (app/main.py): 
+    * Endpoints de FastAPI (/auth/google).
+    * Gestión de archivos estáticos desde la carpeta /static.
+
+2. SEGURIDAD Y VARIABLES DE ENTORNO:
+--------------------------------------------------------------
+- Se utiliza 'os.getenv' para desacoplar secretos del código fuente.
+- SECRET_KEY: Cadena inventada configurada en el panel de Render para firmar tokens JWT.
+- GOOGLE_CLIENT_ID: Credencial oficial de Google Cloud configurada en Render.
+- El código en GitHub contiene valores 'fallback' para desarrollo local, garantizando que el plaintext del repositorio sea seguro.
+
+3. FRONTEND (JavaScript / CSS / HTML):
+--------------------------------------------------------------
+- Localización: carpeta /static/.
+- index.html: Implementa Google Identity Services SDK. Maneja la respuesta del backend, guarda el 'access_token' en LocalStorage y muestra un mensaje de éxito ("Se ha logado con éxito") antes de redirigir.
+- style.css: Diseño minimalista y optimizado para dispositivos móviles.
+- dashboard.html: Página de destino post-login (Landing page).
+
+4. CONFIGURACIÓN DE DESPLIEGUE (Render + Google Cloud):
+--------------------------------------------------------------
+- Repositorio: GitHub con .gitignore de Python (evita archivos basura).
+- Render: Servicio Web configurado con 'Build Command' (pip install) y 'Start Command' (uvicorn).
+- Dependencia Circular Resuelta: Se genera el Client ID en Google Cloud primero, se configura en Render para obtener la URL del servicio, y finalmente se autoriza dicha URL en la consola de Google.
+
+PRÓXIMOS PASOS CRÍTICOS:
+--------------------------------------------------------------
+1. Verificar que el 'GOOGLE_CLIENT_ID' real esté pegado en el data-client_id de static/index.html.
+2. Realizar 'Commit' y 'Push' de los cambios finales en el editor de GitHub.
+3. Monitorear los logs de Render para confirmar que el servidor está "Live".
+4. Validar el flujo completo: Login Google -> Backend -> JWT -> Dashboard.
+==============================================================

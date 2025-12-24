@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+sqlalchemy
+python-jose
+google-auth
+python-multipart

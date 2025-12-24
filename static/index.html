@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mi Web</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="card" id="main-card">
+        <div id="login-ui">
+            <h2>Bienvenido</h2>
+            <p>Inicia sesión con tu cuenta de Google</p>
+            
+            <div id="g_id_onload"
+                 data-client_id="TU_CLIENT_ID_REAL.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse"
+                 data-auto_prompt="false">
+            </div>
+            
+            <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left">
+            </div>
+        </div>
+
+        <div id="success-ui" style="display: none;">
+            <h2 style="color: #28a745;">¡Éxito!</h2>
+            <p>Se ha logado con éxito.</p>
+            <p>Redirigiendo...</p>
+        </div>
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            // Enviamos el token de Google a nuestro backend en FastAPI
+            fetch('/auth/google', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ credential: response.credential })
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Error en la autenticación');
+                return res.json();
+            })
+            .then(data => {
+                // Guardamos nuestro JWT (access_token) en el navegador
+                localStorage.setItem('token', data.access_token);
+                
+                // Cambio visual inmediato (el mensaje que pediste)
+                document.getElementById('login-ui').style.display = 'none';
+                document.getElementById('success-ui').style.display = 'block';
+
+                // Redirigimos después de 2 segundos para que el usuario vea el mensaje
+                setTimeout(() => {
+                    window.location.href = "/static/dashboard.html";
+                }, 2000);
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Hubo un problema al iniciar sesión.");
+            });
+        }
+    </script>
+</body>
+</html>
