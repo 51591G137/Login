@@ -1,0 +1,42 @@
+==============================================================
+ESTADO DEL PROYECTO: Web Auth Google + Identidad Escalable
+==============================================================
+
+OBJETIVO:
+Aplicación web minimalista (FastAPI + JS Vanilla) con autenticación OAuth2 de Google, gestión de sesiones mediante JWT y despliegue automatizado en Render.com.
+
+1. ARQUITECTURA DEL BACKEND (Python - 3 Capas):
+--------------------------------------------------------------
+- Capa de Datos (app/models.py, app/database.py): 
+    * ORM: SQLAlchemy sobre SQLite.
+    * Modelo Normalizado: Tabla 'users' (perfil) y tabla 'accounts' (conexión a proveedores).
+    * Relación: 1:N (Un usuario puede vincular múltiples métodos de acceso).
+- Capa de Servicio (app/services.py): 
+    * Validación de tokens de Google mediante 'google-auth'.
+    * Emisión de JWT firmados con SECRET_KEY (python-jose).
+- Capa de Controlador (app/main.py): 
+    * Endpoint centralizado /auth/google con lógica de registro/vínculo.
+
+2. SEGURIDAD Y ENTORNO:
+--------------------------------------------------------------
+- SECRET_KEY y GOOGLE_CLIENT_ID gestionados vía Environment Variables en Render.
+- Código seguro en GitHub mediante el uso de 'os.getenv' y valores fallback.
+
+3. FRONTEND:
+--------------------------------------------------------------
+- /static/index.html: Integración con SDK Google Identity Services. Maneja la redirección tras éxito y guarda el access_token en LocalStorage.
+- Feedback: Implementado mensaje "Se ha logado con éxito" antes de redirigir al dashboard.
+
+4. ESTADO DE DESPLIEGUE (Render):
+--------------------------------------------------------------
+- Build Status: Exitoso (Dependencias instaladas).
+- Runtime Status: Corrigiendo estructura de archivos (__init__.py y modelos).
+- Base de Datos: Preparada para regenerar esquema relacional (User <-> Account).
+
+PRÓXIMOS PASOS CRÍTICOS:
+--------------------------------------------------------------
+1. Asegurar que 'sql_app.db' sea eliminado en el servidor (o local) para aplicar el nuevo esquema relacional.
+2. Realizar Commit final con la estructura consolidada de /app/main.py y /app/models.py.
+3. Verificar la carga del botón de Google en la URL de Render.
+4. Test de flujo: Login -> Creación en 2 tablas -> Emisión JWT.
+==============================================================
