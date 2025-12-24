@@ -13,11 +13,19 @@ ALGORITHM = "HS256"
 def verify_google_token(token: str):
     """
     Valida el token recibido del frontend con los servidores de Google.
+    Retorna un diccionario con los datos del usuario o None si es inválido.
     """
     try:
         # Verificamos el token contra el Client ID de Google
         idinfo = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
-        return idinfo
+        
+        # Devolvemos un formato consistente para main.py
+        return {
+            'sub': idinfo['sub'],
+            'email': idinfo['email'],
+            'name': idinfo.get('name', ''),
+            'picture': idinfo.get('picture', '')
+        }
     except Exception as e:
         print(f"Error validando token de Google: {e}")
         return None

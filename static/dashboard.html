@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eee;
+        }
+        
+        .user-details h3 {
+            margin: 0 0 4px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .user-details p {
+            margin: 0;
+            font-size: 0.875rem;
+            color: #666;
+        }
+        
+        .logout-btn {
+            background: #f5f5f5;
+            color: #333;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: #e8e8e8;
+        }
+        
+        .content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        
+        .content h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.25rem;
+            font-weight: 500;
+        }
+        
+        .content p {
+            color: #666;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="user-info">
+                <img id="user-avatar" class="avatar" src="" alt="Avatar">
+                <div class="user-details">
+                    <h3 id="user-name">Usuario</h3>
+                    <p id="user-email"></p>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+        </div>
+
+        <div class="content">
+            <h2>Bienvenido</h2>
+            <p>Has iniciado sesión correctamente.</p>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            window.location.href = '/static/index.html';
+        } else {
+            try {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                document.getElementById('user-email').textContent = payload.sub || 'usuario@example.com';
+                document.getElementById('user-avatar').src = 'https://ui-avatars.com/api/?name=' + 
+                    encodeURIComponent(payload.sub || 'User') + '&background=ddd&color=666';
+            } catch (e) {
+                logout();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/static/index.html';
+        }
+    </script>
+</body>
+</html>
